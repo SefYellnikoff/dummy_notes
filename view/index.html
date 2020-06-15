@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dummy Notes</title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+<body ng-app="noteApp">
+
+    <h1 class="title">Notes for Dummies</h1>
+
+    <div class="container-fluid" ng-controller="noteController">
+
+        <div class="row">
+            <div ng-repeat="nota in note">
+                <div class="singleNote col-4">
+                    <h2>{{ nota.nome }}</h2>
+                    <textarea readonly>{{ nota.contenuto }}</textarea>
+                    <button class="btn btn-primary" ng-click="eliminaNota(nota.id)"> Elimina</button>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+        <hr/>
+
+        <h2>Inserisci nuova Nota</h2>
+        <div class="row">
+            <form>
+                <div class="form-group col-12">
+                    <label for="Nome"><strong>Nome</strong></label>
+                    <input ng-model="nota.nome" required="true" type="text" class="form-control" id="Nome" aria-describedby="nome" placeholder="Inserisci nome nota">
+                </div>
+                <div class="col-12">
+                    <textarea class="reset" type="text" ng-model="nota.contenuto"></textarea>
+                    <button class="btn btn-primary" type="button" name="invia" ng-click="creaNota()"> Salva </button>
+                </div>
+                <div class="col-12" ng-show="error">
+                    {{ error }}
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+
+
+
+
+</body>
+<script src="app.js"></script>
+
+</html>
