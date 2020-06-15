@@ -1,0 +1,27 @@
+{
+    "name": "dummy_notes",
+    "version": "1.0.0",
+    "description": "first crud operations",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "debug": "nodemon index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SefYellnikoff/dummy_notes.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/SefYellnikoff/dummy_notes/issues"
+    },
+    "homepage": "https://github.com/SefYellnikoff/dummy_notes#readme",
+    "devDependencies": {
+        "nodemon": "^2.0.4"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "mysql": "^2.18.1"
+    }
+}
