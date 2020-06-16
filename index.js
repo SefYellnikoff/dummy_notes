@@ -1,18 +1,16 @@
 var http = require('http');
+var nconf = require('nconf');
+nconf.argv().env().file({ file: 'config.json' });
+
+
+let config = nconf.get(); //prende tutta la conf del file config.js 
+
 
 /*CONNESSIONE AL DB */
 var mysql = require('mysql');
-var con = mysql.createConnection({
-    host: "localhost",
-    user: "sefora",
-    password: "sefora",
-    database: "node_db"
-});
+var con = mysql.createPool(config.db);
 
-con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-});
+
 
 
 
@@ -20,15 +18,61 @@ con.connect(function(err) {
 
 const express = require('express');
 const app = express();
+var session = require('express-session');
+var storeMysql = require('express-mysql-session')(session);
+var sessionStore = new storeMysql({}, con);
 var server = http.createServer(app);
 var bodyParser = require('body-parser');
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.json({ limit: '50mb' })); //middleware 
 app.use(express.static(__dirname + '/view'));
 
 
 
+app.use(session({ key: "dummy_note", secret: "ciao123", store: sessionStore, resave: false, saveUninitialized: false }));
 
-/* MOSTRO LE NOTE */
+app.post("/login", function(req, res) {
+    console.log(req.body);
+
+    con.query("SELECT * FROM utenze WHERE username=? AND password=?", [req.body.username, req.body.password],
+        function(err, data) {
+            if (err) {
+                return res.status(400).json({ err: "Errore di login" });
+            }
+            if (data.length > 0) {
+                req.session.user = data[0]; //
+                delete req.session.user.password;
+                res.json({ user: req.session.user });
+            } else {
+                return res.status(400).json({ err: "SICURAMENTE NON SONO I TUOI DATI" });
+            }
+        });
+
+});
+
+
+app.get("/session", function(req, res) {
+    resSession = {
+        user: req.session
+    }
+    res.json(resSession);
+});
+
+/*app.use(function(req, res, next) {
+    if (req.session.user == null) {
+        //res.status(400).json({ err: "Riprova" }); //viene eseguita prima
+    } else {
+        next();
+    }
+    next();
+});*/
+
+
+
+
+
+
+
+/* MOSTRA LE NOTE */
 app.get('/note', function(req, res) {
 
     con.query('SELECT * from note', function(err, data) {
@@ -56,7 +100,7 @@ app.post('/note', function(req, res) {
     con.query('INSERT INTO note set ?', [req.body], function(err, data) {
 
         if (err) {
-            throw err;
+            throw err; //correggere con try catch
         } else {
 
             res.json(data);
@@ -81,11 +125,11 @@ app.delete('/note/:id', function(req, res) {
 /* -----------------------*/
 
 /* UPDATE NOTA continuare....*/
-app.post('/note/delete', function(req, res) {
+app.post('/note/:id', function(req, res) {
 
 
 
-    con.query('UPDATE note set ?', [req.body], function(err, data) {
+    con.query('UPDATE note set contenuto = ? WHERE id=?', [req.body.cont, req.params.id], function(err, data) {
 
         if (err) {
             throw err;
@@ -98,4 +142,6 @@ app.post('/note/delete', function(req, res) {
 
 });
 
-server.listen(8085, function() {});
+server.listen(config.port, function() {
+    console.log("server starts on port: ", config.port);
+});

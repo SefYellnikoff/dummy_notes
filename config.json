@@ -1,0 +1,9 @@
+{
+    "port": 8085,
+    "db": {
+        "host": "localhost",
+        "user": "sefora",
+        "password": "sefora",
+        "database": "node_db"
+    }
+}

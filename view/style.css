@@ -43,7 +43,6 @@ textarea {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: box-shadow 0.5s ease;
-    font-smoothing: subpixel-antialiased;
     max-width: 520px;
     max-height: 250px;
 }
@@ -71,4 +70,65 @@ hr {
 
 .singleNote {
     margin-top: 20%;
+}
+
+.margin {
+    font: 15px 'Gloria Hallelujah', cursive;
+    margin-top: 10%;
+    width: 80px;
+    border-radius: 200px;
+}
+
+
+/*LOGIN CSS*/
+
+input[type=password] {
+    border: 1px solid #9C9C9C;
+    border-radius: 3px;
+    height: 28px;
+    width: 45%;
+    background-color: #FAF8F7;
+}
+
+.input_style {
+    border: 1px solid #9C9C9C;
+    border-radius: 3px;
+    height: 28px;
+    width: 45%;
+    background-color: #FAF8F7;
+}
+
+input[type=submit] {
+    border: 1px solid #9C9C9C;
+    border-radius: 3px;
+    height: 28px;
+    width: 20%;
+    background-color: #FAF8F7;
+}
+
+#card {
+    margin-top: 10%;
+    background-color: #444444;
+    height: 300px;
+    width: 40%;
+    opacity: 0.8;
+    border-radius: 5px;
+}
+
+.div {
+    margin: 0;
+    padding: 0;
+    background-image: url(https://media2.giphy.com/media/2UwXvk2ank8bOKWGLb/giphy.gif);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.wel {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 40px;
+    color: #ffffff;
+}
+
+p {
+    line-height: 2px;
 }

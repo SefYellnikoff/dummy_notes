@@ -12,42 +12,71 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
-<body ng-app="noteApp">
-
+<body ng-controller="noteController" ng-app="noteApp">
     <h1 class="title">Notes for Dummies</h1>
+    <center>
+        <div class="div" id="card">
+            <font class="wel">WELCOME!</font>
 
-    <div class="container-fluid" ng-controller="noteController">
-
-        <div class="row">
-            <div ng-repeat="nota in note">
-                <div class="singleNote col-4">
-                    <h2>{{ nota.nome }}</h2>
-                    <textarea readonly>{{ nota.contenuto }}</textarea>
-                    <button class="btn btn-primary" ng-click="eliminaNota(nota.id)"> Elimina</button>
-                </div>
-            </div>
-        </div>
-
-        <br/>
-        <hr/>
-
-        <h2>Inserisci nuova Nota</h2>
-        <div class="row">
             <form>
-                <div class="form-group col-12">
-                    <label for="Nome"><strong>Nome</strong></label>
-                    <input ng-model="nota.nome" required="true" type="text" class="form-control" id="Nome" aria-describedby="nome" placeholder="Inserisci nome nota">
+                <div class="row">
+                    <div class="col-12">
+                        <input class="input_style" placeholder="username" type="text" ng-model="usernameLogin">
+                    </div>
                 </div>
-                <div class="col-12">
-                    <textarea class="reset" type="text" ng-model="nota.contenuto"></textarea>
-                    <button class="btn btn-primary" type="button" name="invia" ng-click="creaNota()"> Salva </button>
-                </div>
-                <div class="col-12" ng-show="error">
-                    {{ error }}
+                <div class="row">
+                    <div class="col-12">
+                        <input class="input_style" type="password" placeholder="password" ng-model="passwordLogin">
+                        <div class="col-5">
+                            <button class="btn btn-primary margin" ng-click="login(usernameLogin,passwordLogin)"> Login</button>
+                        </div>
+                    </div>
+
                 </div>
             </form>
         </div>
+    </center>
 
+    <div ng-if="user">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div ng-repeat="nota in note track by $index">
+                    <div class="singleNote col-6">
+
+                        <h2>{{ nota.nome }}</h2>
+
+                        <textarea ng-model="note[$index].contenuto">{{ nota.contenuto }} </textarea>
+
+                        <div class="col-6">
+                            <button class="btn btn-primary  margin" ng-click="eliminaNota(nota.id)"> Elimina</button>
+                            <button type="button" ng-click="aggiornaNota(nota.id, nota.contenuto)" class="btn btn-primary margin">Modifica</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br/>
+            <hr/>
+
+            <h2>Inserisci nuova Nota</h2>
+            <div class="row">
+                <form name="form">
+                    <div class="form-group col-12">
+                        <label for="Nome"><strong>Nome</strong></label>
+                        <input ng-model="notaInsert.nome" ng-required="true" type="text" class="form-control" id="Nome" name="nome" aria-describedby="nome" placeholder="Inserisci nome nota">
+                    </div>
+                    <div class="col-12">
+                        <textarea class="reset" type="text" ng-model="notaInsert.contenuto"></textarea>
+                        <button class="btn btn-primary margin" type="button" name="invia" ng-click="creaNota()"> Salva </button>
+                    </div>
+                    <div class="col-12" ng-show="error">
+                        {{ error }}
+                    </div>
+                </form>
+            </div>
+
+        </div>
     </div>
 
 
