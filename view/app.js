@@ -61,20 +61,23 @@ angular.module("noteApp", []).controller("noteController", ["$scope", "$http", f
     }
 
     function getSession() {
-        $http.get('session', function(res) {
-            if (res.data.user) {
-                $scope.user = res.data.user;
+        $http.get('session').then(function(res) {
+            console.log("SESSION OK:" + res.data.user.user)
+            if (res.data.user.user) {
+                $scope.user = res.data.user.user;
+                getData();
             } else {
                 $scope.user = null;
             }
         }, function(res) {
+            console.log("SESSION OK:" + res)
             $scope.user = null;
         });
     }
     getSession();
 
     $scope.logout = function() {
-        $http.post("logout", function() {
+        $http.get("logout", function() {
             window.reload()
         });
     }

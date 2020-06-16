@@ -42,6 +42,7 @@ app.post("/login", function(req, res) {
                 req.session.user = data[0]; //
                 delete req.session.user.password;
                 res.json({ user: req.session.user });
+                //req.session.save();
             } else {
                 return res.status(400).json({ err: "SICURAMENTE NON SONO I TUOI DATI" });
             }
@@ -59,7 +60,7 @@ app.get("/session", function(req, res) {
 
 /*app.use(function(req, res, next) {
     if (req.session.user == null) {
-        //res.status(400).json({ err: "Riprova" }); //viene eseguita prima
+        res.status(400).json({ err: "Riprova" }); //viene eseguita prima
     } else {
         next();
     }
@@ -141,6 +142,12 @@ app.post('/note/:id', function(req, res) {
     });
 
 });
+
+
+/*app.get('/logout', function(req, res, next) { DA CONTINUARE
+    delete req.session;
+    res.redirect('/');
+});*/
 
 server.listen(config.port, function() {
     console.log("server starts on port: ", config.port);
