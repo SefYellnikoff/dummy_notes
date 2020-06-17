@@ -11,7 +11,6 @@ var con = mysql.createPool(config.db);
 
 
 const express = require('express');
-
 const app = express();
 var session = require('express-session');
 var storeMysql = require('express-mysql-session')(session);
@@ -24,17 +23,17 @@ app.use(express.static(__dirname + '/view'));
 
 
 /* SOCKET. IO*/
-/*const io = require('socket.io')(http);
+var io = require('socket.io')(server);
+//var io_cong = require('socket.io')
 
 io.on('connection', function (socket) {
     console.log("socket connected", socket.id);
-    socket.name = randomName();
     socket.emit('hello', socket.name);
     socket.on('message', function (text) {
         io.emit('message', socket.name, text);
     });
 });
-/*
+
 /**SOCKET.IO */
 
 
@@ -53,7 +52,7 @@ app.post("/login", function (req, res) {
                 req.session.user = data[0]; //
                 delete req.session.user.password;
                 res.json({ user: req.session.user });
-                //req.session.save();
+               
             } else {
                 return res.status(400).json({ err: "SICURAMENTE NON SONO I TUOI DATI" });
             }
@@ -69,14 +68,15 @@ app.get("/session", function (req, res) {
     res.json(resSession);
 });
 
-/*app.use(function(req, res, next) {
+app.use(function(req, res, next) {
     if (req.session.user == null) {
-        res.status(400).json({ err: "Riprova" }); //viene eseguita prima
+        res.json({ err: "Riprova" }); //viene eseguita prima
     } else {
         next();
     }
-    next();
-});*/
+    
+});
+
 
 
 
