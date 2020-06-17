@@ -1,22 +1,17 @@
 var http = require('http');
 var nconf = require('nconf');
 nconf.argv().env().file({ file: 'config.json' });
-
-
 let config = nconf.get(); //prende tutta la conf del file config.js 
 
 
 /*CONNESSIONE AL DB */
 var mysql = require('mysql');
 var con = mysql.createPool(config.db);
-
-
-
-
-
 /* -----------------------*/
 
+
 const express = require('express');
+
 const app = express();
 var session = require('express-session');
 var storeMysql = require('express-mysql-session')(session);
@@ -28,13 +23,29 @@ app.use(express.static(__dirname + '/view'));
 
 
 
+/* SOCKET. IO*/
+/*const io = require('socket.io')(http);
+
+io.on('connection', function (socket) {
+    console.log("socket connected", socket.id);
+    socket.name = randomName();
+    socket.emit('hello', socket.name);
+    socket.on('message', function (text) {
+        io.emit('message', socket.name, text);
+    });
+});
+/*
+/**SOCKET.IO */
+
+
+
 app.use(session({ key: "dummy_note", secret: "ciao123", store: sessionStore, resave: false, saveUninitialized: false }));
 
-app.post("/login", function(req, res) {
+app.post("/login", function (req, res) {
     console.log(req.body);
 
     con.query("SELECT * FROM utenze WHERE username=? AND password=?", [req.body.username, req.body.password],
-        function(err, data) {
+        function (err, data) {
             if (err) {
                 return res.status(400).json({ err: "Errore di login" });
             }
@@ -51,7 +62,7 @@ app.post("/login", function(req, res) {
 });
 
 
-app.get("/session", function(req, res) {
+app.get("/session", function (req, res) {
     resSession = {
         user: req.session
     }
@@ -74,9 +85,9 @@ app.get("/session", function(req, res) {
 
 
 /* MOSTRA LE NOTE */
-app.get('/note', function(req, res) {
+app.get('/note', function (req, res) {
 
-    con.query('SELECT * from note', function(err, data) {
+    con.query('SELECT * from note', function (err, data) {
 
         if (err) {
             res.send({ err });
@@ -94,11 +105,11 @@ app.get('/note', function(req, res) {
 
 /* INSERIMENTO  NOTA */
 
-app.post('/note', function(req, res) {
+app.post('/note', function (req, res) {
 
 
 
-    con.query('INSERT INTO note set ?', [req.body], function(err, data) {
+    con.query('INSERT INTO note set ?', [req.body], function (err, data) {
 
         if (err) {
             throw err; //correggere con try catch
@@ -113,8 +124,8 @@ app.post('/note', function(req, res) {
 
 /*CANCELLA NOTA*/
 
-app.delete('/note/:id', function(req, res) {
-    con.query("DELETE from note WHERE id= ?", [req.params.id], function(err, data) {
+app.delete('/note/:id', function (req, res) {
+    con.query("DELETE from note WHERE id= ?", [req.params.id], function (err, data) {
         if (err) {
             throw err;
         } else {
@@ -126,11 +137,11 @@ app.delete('/note/:id', function(req, res) {
 /* -----------------------*/
 
 /* UPDATE NOTA continuare....*/
-app.post('/note/:id', function(req, res) {
+app.post('/note/:id', function (req, res) {
 
 
 
-    con.query('UPDATE note set contenuto = ? WHERE id=?', [req.body.cont, req.params.id], function(err, data) {
+    con.query('UPDATE note set contenuto = ? WHERE id=?', [req.body.cont, req.params.id], function (err, data) {
 
         if (err) {
             throw err;
@@ -144,11 +155,11 @@ app.post('/note/:id', function(req, res) {
 });
 
 
-/*app.get('/logout', function(req, res, next) { DA CONTINUARE
-    delete req.session;
-    res.redirect('/');
-});*/
+app.post('/logout', function(req, res, next) {
+    delete req.session.user;
+    res.end();
+});
 
-server.listen(config.port, function() {
+server.listen(config.port, function () {
     console.log("server starts on port: ", config.port);
 });

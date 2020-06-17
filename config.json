@@ -2,8 +2,8 @@
     "port": 8085,
     "db": {
         "host": "localhost",
-        "user": "sefora",
-        "password": "sefora",
+        "user": "root",
+        "password": "root",
         "database": "node_db"
     }
 }

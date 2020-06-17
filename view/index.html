@@ -7,15 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dummy Notes</title>
 </head>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <link rel="stylesheet" href="style.css">
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
 <body ng-controller="noteController" ng-app="noteApp">
     <h1 class="title">Notes for Dummies</h1>
     <center>
-        <div class="div" id="card">
+        <div ng-if="!user" class="div" id="card">
             <font class="wel">WELCOME!</font>
 
             <form>
@@ -28,7 +31,8 @@
                     <div class="col-12">
                         <input class="input_style" type="password" placeholder="password" ng-model="passwordLogin">
                         <div class="col-5">
-                            <button class="btn btn-primary margin" ng-click="login(usernameLogin,passwordLogin)"> Login</button>
+                            <button class="btn btn-primary margin" ng-click="login(usernameLogin,passwordLogin)">
+                                Login</button>
                         </div>
                     </div>
 
@@ -50,32 +54,45 @@
 
                         <div class="col-6">
                             <button class="btn btn-primary  margin" ng-click="eliminaNota(nota.id)"> Elimina</button>
-                            <button type="button" ng-click="aggiornaNota(nota.id, nota.contenuto)" class="btn btn-primary margin">Modifica</button>
+                            <button type="button" ng-click="aggiornaNota(nota.id, nota.contenuto)"
+                                class="btn btn-primary margin">Modifica</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <br/>
-            <hr/>
+            <br />
+            <hr />
 
             <h2>Inserisci nuova Nota</h2>
             <div class="row">
                 <form name="form">
                     <div class="form-group col-12">
                         <label for="Nome"><strong>Nome</strong></label>
-                        <input ng-model="notaInsert.nome" ng-required="true" type="text" class="form-control" id="Nome" name="nome" aria-describedby="nome" placeholder="Inserisci nome nota">
+                        <input ng-model="notaInsert.nome" ng-required="true" type="text" class="form-control" id="Nome"
+                            name="nome" aria-describedby="nome" placeholder="Inserisci nome nota">
                     </div>
                     <div class="col-12">
                         <textarea class="reset" type="text" ng-model="notaInsert.contenuto"></textarea>
-                        <button class="btn btn-primary margin" type="button" name="invia" ng-click="creaNota()"> Salva </button>
-                        <button class="btn btn-danger  margin" type="button" name="invia" ng-click="logout()"> Logout </button>
+                        <button class="btn btn-primary margin" type="button" name="invia" ng-click="creaNota()"> Salva
+                        </button>
+                        <button class="btn btn-danger  margin" type="button" name="invia" ng-click="logout()"> Logout
+                        </button>
                     </div>
                     <div class="col-12" ng-show="error">
                         {{ error }}
                     </div>
                 </form>
             </div>
+
+
+
+
+
+            <!-- PROVA SOCKET-->
+            <!--<div id='info'></div>
+            Say something: <input type='text' id='message' /><br>
+            <div id='messages'></div>-->
 
         </div>
     </div>
@@ -87,5 +104,8 @@
 
 </body>
 <script src="app.js"></script>
+<!--<script src="function.js"></script>-->
+
+
 
 </html>

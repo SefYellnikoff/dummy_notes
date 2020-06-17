@@ -108,7 +108,7 @@ input[type=submit] {
 
 #card {
     margin-top: 10%;
-    background-color: #444444;
+    background-color: blue;
     height: 300px;
     width: 40%;
     opacity: 0.8;
@@ -118,7 +118,7 @@ input[type=submit] {
 .div {
     margin: 0;
     padding: 0;
-    background-image: url(https://media2.giphy.com/media/2UwXvk2ank8bOKWGLb/giphy.gif);
+    
     background-size: cover;
     background-repeat: no-repeat;
 }
