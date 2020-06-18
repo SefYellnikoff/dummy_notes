@@ -108,19 +108,20 @@ input[type=submit] {
 
 #card {
     margin-top: 10%;
-    background-color: blue;
-    height: 300px;
-    width: 40%;
     opacity: 0.8;
     border-radius: 5px;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
 .div {
     margin: 0;
     padding: 0;
-    
+    background-image: url(https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/116770670/original/281f85ad141b056fc82fa8058134a86421c61817/paint-you-a-beautiful-pixel-art-landscape.png);
     background-size: cover;
     background-repeat: no-repeat;
+    height: 500px;
+    width: 500px;
 }
 
 .wel {
@@ -129,6 +130,9 @@ input[type=submit] {
     color: #ffffff;
 }
 
-p {
-    line-height: 2px;
+.margin_ {
+    font: 15px 'Gloria Hallelujah', cursive;
+    margin-top: 2%;
+    width: 80px;
+    border-radius: 200px;
 }

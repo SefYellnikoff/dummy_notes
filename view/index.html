@@ -18,17 +18,19 @@
     <h1 class="title">Notes for Dummies</h1>
     <center>
         <div ng-if="!user" class="div" id="card">
-            <font class="wel">WELCOME!</font>
+            <div class="marginDiv">
+                <font class="wel">WELCOME!</font>
+            </div>
 
             <form>
                 <div class="row">
                     <div class="col-12">
-                        <input class="input_style" placeholder="username" type="text" ng-model="usernameLogin">
+                        <input class="input_style form-control" placeholder="username" type="text" ng-model="usernameLogin">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <input class="input_style" type="password" placeholder="password" ng-model="passwordLogin">
+                        <input class="form-control" type="password" placeholder="password" ng-model="passwordLogin">
                         <div class="col-5">
                             <button class="btn btn-primary margin" ng-click="login(usernameLogin,passwordLogin)">
                                 Login</button>
@@ -42,19 +44,28 @@
 
     <div ng-show="user">
         <div class="container-fluid">
+            <!-- PROVA SOCKET 1-->
+            <div id='info'></div>
+            <input style="width:430px" id="message" class="form-control" placeholder="write something" type="text" ng-model="usernameLogin">
+            <div id='messages'></div>
+            <!-- PROVA SOCKET 1-->
+
+
 
             <div class="row">
                 <div ng-repeat="nota in note track by $index">
                     <div class="singleNote col-6">
 
-                        <h2>{{ nota.nome }}</h2>
+                        <h2>{{ nota.nome }} </h2>
 
-                        <textarea ng-model="note[$index].contenuto">{{ nota.contenuto }} </textarea>
+                        <textarea maxlength="50" ng-change="myFunc()" ng-model="note[$index].contenuto">{{ nota.contenuto }} </textarea>
+
+
 
                         <div class="col-6">
+
                             <button class="btn btn-primary  margin" ng-click="eliminaNota(nota.id)"> Elimina</button>
-                            <button type="button" ng-click="aggiornaNota(nota.id, nota.contenuto)"
-                                class="btn btn-primary margin">Modifica</button>
+                            <button type="button" ng-click="aggiornaNota(nota.id, nota.contenuto)" class="btn btn-primary margin">Modifica</button>
                         </div>
                     </div>
                 </div>
@@ -68,8 +79,7 @@
                 <form name="form">
                     <div class="form-group col-12">
                         <label for="Nome"><strong>Nome</strong></label>
-                        <input ng-model="notaInsert.nome" ng-required="true" type="text" class="form-control" id="Nome"
-                            name="nome" aria-describedby="nome" placeholder="Inserisci nome nota">
+                        <input ng-model="notaInsert.nome" ng-required="true" type="text" class="form-control" id="Nome" name="nome" aria-describedby="nome" placeholder="Inserisci nome nota">
                     </div>
                     <div class="col-12">
                         <textarea class="reset" type="text" ng-model="notaInsert.contenuto"></textarea>
@@ -83,15 +93,16 @@
                     </div>
                 </form>
             </div>
+            <div>
+                <p>Prova servizio(factory)</p>
+                <input style="width:430px" class="form-control" ng-init="message='tryme'" ng-model="message">
+                <button class="btn btn-primary margin_" ng-click="callNotify(message);">NOTIFY</button>
+                <p>(you have to click 3 times to see an alert)</p>
+            </div>
 
 
 
 
-
-            <!-- PROVA SOCKET-->
-            <div id='info'></div>
-            Say something: <input type='text' id='message' /><br>
-            <div id='messages'></div>
 
         </div>
     </div>

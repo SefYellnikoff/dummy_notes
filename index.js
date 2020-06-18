@@ -26,13 +26,28 @@ app.use(express.static(__dirname + '/view'));
 var io = require('socket.io')(server);
 //var io_cong = require('socket.io')
 
-io.on('connection', function (socket) {
+io.on('connection', function(socket) {
     console.log("socket connected", socket.id);
     socket.emit('hello', socket.name);
-    socket.on('message', function (text) {
+    socket.on('message', function(text) {
         io.emit('message', socket.name, text);
     });
+
+    setInterval(function() {
+        socket.emit('message2', chooseColor());
+    }, 8000);
 });
+
+
+
+function chooseColor() {
+    var color = Math.floor(Math.random() * Math.pow(256, 3)).toString(16);
+    while (color.length < 6) {
+        color = "0" + color;
+    }
+    return "#" + color;
+
+}
 
 /**SOCKET.IO */
 
@@ -40,11 +55,11 @@ io.on('connection', function (socket) {
 
 app.use(session({ key: "dummy_note", secret: "ciao123", store: sessionStore, resave: false, saveUninitialized: false }));
 
-app.post("/login", function (req, res) {
+app.post("/login", function(req, res) {
     console.log(req.body);
 
     con.query("SELECT * FROM utenze WHERE username=? AND password=?", [req.body.username, req.body.password],
-        function (err, data) {
+        function(err, data) {
             if (err) {
                 return res.status(400).json({ err: "Errore di login" });
             }
@@ -52,7 +67,7 @@ app.post("/login", function (req, res) {
                 req.session.user = data[0]; //
                 delete req.session.user.password;
                 res.json({ user: req.session.user });
-               
+
             } else {
                 return res.status(400).json({ err: "SICURAMENTE NON SONO I TUOI DATI" });
             }
@@ -61,7 +76,7 @@ app.post("/login", function (req, res) {
 });
 
 
-app.get("/session", function (req, res) {
+app.get("/session", function(req, res) {
     resSession = {
         user: req.session
     }
@@ -74,7 +89,7 @@ app.use(function(req, res, next) {
     } else {
         next();
     }
-    
+
 });
 
 
@@ -85,9 +100,9 @@ app.use(function(req, res, next) {
 
 
 /* MOSTRA LE NOTE */
-app.get('/note', function (req, res) {
+app.get('/note', function(req, res) {
 
-    con.query('SELECT * from note', function (err, data) {
+    con.query('SELECT * from note', function(err, data) {
 
         if (err) {
             res.send({ err });
@@ -105,11 +120,11 @@ app.get('/note', function (req, res) {
 
 /* INSERIMENTO  NOTA */
 
-app.post('/note', function (req, res) {
+app.post('/note', function(req, res) {
 
 
 
-    con.query('INSERT INTO note set ?', [req.body], function (err, data) {
+    con.query('INSERT INTO note set ?', [req.body], function(err, data) {
 
         if (err) {
             throw err; //correggere con try catch
@@ -124,8 +139,8 @@ app.post('/note', function (req, res) {
 
 /*CANCELLA NOTA*/
 
-app.delete('/note/:id', function (req, res) {
-    con.query("DELETE from note WHERE id= ?", [req.params.id], function (err, data) {
+app.delete('/note/:id', function(req, res) {
+    con.query("DELETE from note WHERE id= ?", [req.params.id], function(err, data) {
         if (err) {
             throw err;
         } else {
@@ -137,11 +152,11 @@ app.delete('/note/:id', function (req, res) {
 /* -----------------------*/
 
 /* UPDATE NOTA continuare....*/
-app.post('/note/:id', function (req, res) {
+app.post('/note/:id', function(req, res) {
 
 
 
-    con.query('UPDATE note set contenuto = ? WHERE id=?', [req.body.cont, req.params.id], function (err, data) {
+    con.query('UPDATE note set contenuto = ? WHERE id=?', [req.body.cont, req.params.id], function(err, data) {
 
         if (err) {
             throw err;
@@ -160,6 +175,6 @@ app.post('/logout', function(req, res, next) {
     res.end();
 });
 
-server.listen(config.port, function () {
+server.listen(config.port, function() {
     console.log("server starts on port: ", config.port);
 });
