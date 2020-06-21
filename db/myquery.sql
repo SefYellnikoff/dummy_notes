@@ -1,6 +1,0 @@
-/* CREATE TABLE 0.0*/
-CREATE TABLE  node_db.note (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(25) NOT NULL,
-    contenuto  TEXT NULL
-   )  ENGINE=INNODB;

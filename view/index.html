@@ -13,24 +13,31 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
-
 <body ng-controller="noteController" ng-app="noteApp">
-    <h1 class="title">Notes for Dummies</h1>
-    <center>
+    <div class="row" id="title_container">
+        <h1 class="title col-8">Notes for Dummies</h1>
+        <div class="col-4">
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+    <div class="margin_div ">
+
         <div ng-if="!user" class="div" id="card">
-            <div class="marginDiv">
-                <font class="wel">WELCOME!</font>
-            </div>
 
             <form>
                 <div class="row">
                     <div class="col-12">
-                        <input class="input_style form-control" placeholder="username" type="text" ng-model="usernameLogin">
+                        <input class="form-control login_input" placeholder="username" type="text" ng-model="usernameLogin">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <input class="form-control" type="password" placeholder="password" ng-model="passwordLogin">
+                        <input class="form-control login_input" type="password" placeholder="password" ng-model="passwordLogin">
                         <div class="col-5">
                             <button class="btn btn-primary margin" ng-click="login(usernameLogin,passwordLogin)">
                                 Login</button>
@@ -40,70 +47,85 @@
                 </div>
             </form>
         </div>
-    </center>
-
-    <div ng-show="user">
-        <div class="container-fluid">
-            <!-- PROVA SOCKET 1-->
-            <div id='info'></div>
-            <input style="width:430px" id="message" class="form-control" placeholder="write something" type="text" ng-model="usernameLogin">
-            <div id='messages'></div>
-            <!-- PROVA SOCKET 1-->
 
 
+        <div ng-show="user">
+            <div class="container-fluid">
 
-            <div class="row">
-                <div ng-repeat="nota in note track by $index">
-                    <div class="singleNote col-6">
+                <div class="row">
+                    <div ng-repeat="nota in note track by $index">
+                        <div class="singleNote col-6">
 
-                        <h2>{{ nota.nome }} </h2>
+                            <h2>{{ nota.nome }} </h2>
 
-                        <textarea maxlength="50" ng-change="myFunc()" ng-model="note[$index].contenuto">{{ nota.contenuto }} </textarea>
+                            <textarea ng-change="textareaChanged()" id="textarea" maxlength="50" ng-model="note[$index].contenuto">{{ nota.contenuto }} </textarea>
 
 
 
-                        <div class="col-6">
+                            <div class="col-6">
+                                <button class="btn btn-primary  margin" ng-click="eliminaNota(nota.id)"> Elimina</button>
+                                <button type="button" ng-click="aggiornaNota(nota.id, nota.contenuto)" class="btn btn-primary margin">Modifica</button>
+                            </div>
 
-                            <button class="btn btn-primary  margin" ng-click="eliminaNota(nota.id)"> Elimina</button>
-                            <button type="button" ng-click="aggiornaNota(nota.id, nota.contenuto)" class="btn btn-primary margin">Modifica</button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <br />
-            <hr />
+                <br />
+                <hr />
 
-            <h2>Inserisci nuova Nota</h2>
-            <div class="row">
-                <form name="form">
-                    <div class="form-group col-12">
-                        <label for="Nome"><strong>Nome</strong></label>
-                        <input ng-model="notaInsert.nome" ng-required="true" type="text" class="form-control" id="Nome" name="nome" aria-describedby="nome" placeholder="Inserisci nome nota">
-                    </div>
-                    <div class="col-12">
-                        <textarea class="reset" type="text" ng-model="notaInsert.contenuto"></textarea>
-                        <button class="btn btn-primary margin" type="button" name="invia" ng-click="creaNota()"> Salva
+                <h2>Inserisci nuova Nota</h2>
+                <div class="row">
+                    <form name="form">
+                        <div class="form-group col-12">
+                            <label for="Nome"><strong>Nome</strong></label>
+                            <input ng-model="notaInsert.nome" ng-required="true" type="text" class="form-control" id="Nome" name="nome" aria-describedby="nome" placeholder="Inserisci nome nota">
+                        </div>
+                        <div class="col-12">
+                            <textarea class="reset" type="text" ng-model="notaInsert.contenuto"></textarea>
+                            <button class="btn btn-primary margin" type="button" name="invia" ng-click="creaNota()"> Salva
                         </button>
-                        <button class="btn btn-danger  margin" type="button" name="invia" ng-click="logout()"> Logout
+                            <button class="btn btn-danger  margin" type="button" name="invia" ng-click="logout()"> Logout
                         </button>
-                    </div>
-                    <div class="col-12" ng-show="error">
-                        {{ error }}
-                    </div>
-                </form>
+                        </div>
+                        <div class="col-12" ng-show="error">
+                            {{ error }}
+                        </div>
+                    </form>
+                </div>
+
+                <br />
+                <hr />
+
+                <div>
+                    <h2>Prova servizio(factory)</h2>
+                    <input style="width:430px" class="form-control" ng-init="message='tryme'" ng-model="message">
+                    <button class="btn btn-primary margin_" ng-click="callNotify(message);">NOTIFY</button>
+                    <p>(you have to click 3 times to see an alert)</p>
+                </div>
+
+                <br />
+                <hr />
+
+                <div>
+                    <h2>Prova chatSocket</h2>
+                    <!-- PROVA SOCKET 1-->
+                    <div id='info'></div>
+                    <input style="width:430px" id="message" class="form-control" placeholder="write something" type="text" ng-model="usernameLogin">
+                    <div id='messages'></div>
+                    <!-- PROVA SOCKET 1-->
+                </div>
+
+                <table>
+                    <tr id="go">
+                        <td><button type="button"> Yellow</button></td>
+                    </tr>
+                </table>
+
+
+
+
             </div>
-            <div>
-                <p>Prova servizio(factory)</p>
-                <input style="width:430px" class="form-control" ng-init="message='tryme'" ng-model="message">
-                <button class="btn btn-primary margin_" ng-click="callNotify(message);">NOTIFY</button>
-                <p>(you have to click 3 times to see an alert)</p>
-            </div>
-
-
-
-
-
         </div>
     </div>
 

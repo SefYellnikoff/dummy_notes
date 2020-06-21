@@ -28,26 +28,30 @@ var io = require('socket.io')(server);
 
 io.on('connection', function(socket) {
     console.log("socket connected", socket.id);
-    socket.emit('hello', socket.name);
+    socket.emit('hello', socket.id);
     socket.on('message', function(text) {
-        io.emit('message', socket.name, text);
+        io.emit('message', socket.id, text);
     });
 
-    setInterval(function() {
-        socket.emit('message2', chooseColor());
-    }, 8000);
+
+
+    /**/
+    /*setInterval(function() {
+        console.log(getNotes())
+        socket.emit('updateNotes', getNotes());
+    }, 8000);*/
 });
 
 
 
-function chooseColor() {
+/*function chooseColor() {
     var color = Math.floor(Math.random() * Math.pow(256, 3)).toString(16);
     while (color.length < 6) {
         color = "0" + color;
     }
     return "#" + color;
 
-}
+}*/
 
 /**SOCKET.IO */
 
@@ -63,13 +67,17 @@ app.post("/login", function(req, res) {
             if (err) {
                 return res.status(400).json({ err: "Errore di login" });
             }
-            if (data.length > 0) {
-                req.session.user = data[0]; //
-                delete req.session.user.password;
-                res.json({ user: req.session.user });
-
+            if (req.body.username === "common" && req.body.password === "common") {
+                return res.status(400).json({ err: "denied" });
             } else {
-                return res.status(400).json({ err: "SICURAMENTE NON SONO I TUOI DATI" });
+                if (data.length > 0) {
+                    req.session.user = data[0]; //
+                    delete req.session.user.password;
+                    res.json({ user: req.session.user });
+
+                } else {
+                    return res.status(400).json({ err: "SICURAMENTE NON SONO I TUOI DATI" });
+                }
             }
         });
 
@@ -95,36 +103,44 @@ app.use(function(req, res, next) {
 
 
 
-
-
-
-
 /* MOSTRA LE NOTE */
+
+
 app.get('/note', function(req, res) {
-
-    con.query('SELECT * from note', function(err, data) {
-
+    console.log(req.session.user.username)
+    console.log("ciao")
+    con.query("SELECT * FROM note WHERE username = 'common' UNION (SELECT * FROM note WHERE username=?)", [req.session.user.username], function(err, data) {
+        console.log(req.session.user.username)
         if (err) {
             res.send({ err });
         } else {
             console.table(data);
+            console.log("data")
 
             res.json(data);
             res.end();
+            console.log(data);
         }
 
     });
+
 });
+
+
 
 /* -----------------------*/
 
 /* INSERIMENTO  NOTA */
 
 app.post('/note', function(req, res) {
+    console.log(req.body)
+    console.log("sopra")
+    console.log(req.body.nome)
+    console.log(req.body.contenuto)
+    console.log(req.body)
+    console.log(req.session.user.username)
 
-
-
-    con.query('INSERT INTO note set ?', [req.body], function(err, data) {
+    con.query('INSERT INTO note (nome, contenuto, username) VALUES (?,?,?)', [req.body.nome, req.body.contenuto, req.session.user.username], function(err, data) {
 
         if (err) {
             throw err; //correggere con try catch
@@ -132,6 +148,7 @@ app.post('/note', function(req, res) {
 
             res.json(data);
             res.end();
+            io.emit('updateNotes', true);
         }
     });
 
@@ -145,6 +162,7 @@ app.delete('/note/:id', function(req, res) {
             throw err;
         } else {
             res.end();
+            io.emit('updateNotes', true);
         }
     });
 });
@@ -164,6 +182,7 @@ app.post('/note/:id', function(req, res) {
 
             res.json(data);
             res.end();
+            io.emit('updateNotes', true);
         }
     });
 

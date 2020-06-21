@@ -8,9 +8,11 @@ angular.module("noteApp", []).controller("noteController", ["$scope", "$http", "
 
 
 
+    //$scope.note = {};
 
     function getData() {
         $http.get('note').then(function(res) {
+            console.log(res.data)
             $scope.note = res.data;
         })
     }
@@ -107,17 +109,26 @@ angular.module("noteApp", []).controller("noteController", ["$scope", "$http", "
             }
         });
         socket.on('message2', function(color) {
-            console.log("ciao" + color)
+            //console.log("ciao" + color)
             $("body").css({
                 transition: 'background-color 1s ease-in-out',
                 "background": "None",
                 "background-color": color
             });
+
         });
+        socket.on("updateNotes", function() {
+            getData();
+
+        });
+
     });
-
-
-
+    /* TEXTAREA*/
+    /*$scope.textareaChanged = function() {
+        console.log("ciao")
+        getData();
+        console.log("due")
+    }*/
 
 
 
