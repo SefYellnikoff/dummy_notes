@@ -32,6 +32,7 @@ io.on('connection', function(socket) {
     socket.on('message', function(text) {
         io.emit('message', socket.id, text);
     });
+    socket.emit("buttonColor", true);
 
 
 
@@ -41,6 +42,7 @@ io.on('connection', function(socket) {
         socket.emit('updateNotes', getNotes());
     }, 8000);*/
 });
+
 
 
 
@@ -57,10 +59,21 @@ io.on('connection', function(socket) {
 
 
 
-app.use(session({ key: "dummy_note", secret: "ciao123", store: sessionStore, resave: false, saveUninitialized: false }));
-
+app.use(session({
+    key: "dummy_note",
+    secret: "ciao123",
+    store: sessionStore,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000,
+        secure: false,
+        httpOnly: false // <- set httpOnly to false
+    },
+}));
+var userMy = "";
 app.post("/login", function(req, res) {
-    console.log(req.body);
+    //console.log(req.body);
 
     con.query("SELECT * FROM utenze WHERE username=? AND password=?", [req.body.username, req.body.password],
         function(err, data) {
@@ -74,10 +87,13 @@ app.post("/login", function(req, res) {
                     req.session.user = data[0]; //
                     delete req.session.user.password;
                     res.json({ user: req.session.user });
+                    userMy = req.body.username;
+                    //console.log(userMy + "userm")
 
                 } else {
                     return res.status(400).json({ err: "SICURAMENTE NON SONO I TUOI DATI" });
                 }
+
             }
         });
 
@@ -85,8 +101,9 @@ app.post("/login", function(req, res) {
 
 
 app.get("/session", function(req, res) {
+    //console.log("IN SESSION " + JSON.stringify(req.session))
     resSession = {
-        user: req.session
+        user: req.session,
     }
     res.json(resSession);
 });
@@ -103,28 +120,51 @@ app.use(function(req, res, next) {
 
 
 
+
 /* MOSTRA LE NOTE */
 
 
 app.get('/note', function(req, res) {
-    console.log(req.session.user.username)
-    console.log("ciao")
+    //console.log(req.session.user.username)
     con.query("SELECT * FROM note WHERE username = 'common' UNION (SELECT * FROM note WHERE username=?)", [req.session.user.username], function(err, data) {
-        console.log(req.session.user.username)
+        //console.log(req.session.user.username)
         if (err) {
             res.send({ err });
         } else {
             console.table(data);
-            console.log("data")
+
 
             res.json(data);
             res.end();
-            console.log(data);
+
+
         }
 
     });
 
 });
+app.get('/color', function(req, res) {
+    //console.log("partita")
+    //console.log(req.query.color)
+    //console.log(req.query.user_utente)
+    //console.log(req.query.user_utente)
+
+    res.json(req.query.user_utente)
+
+    req.session.color = req.query.color;
+
+    var colorChanged = req.session.color;
+    var sameUser = req.query.user_utente;
+    req.session.save();
+    //console.log(JSON.stringify(req.session))
+    var mystring = JSON.parse(sameUser);
+    //console.log(mystring)
+    // console.log(mystring.username)
+    var myUsername = mystring.username
+    console.log(colorChanged, "holaaaaaaaaaaaaaaaaa")
+    io.emit("changedColor", colorChanged, myUsername)
+    res.end();
+})
 
 
 
@@ -133,12 +173,6 @@ app.get('/note', function(req, res) {
 /* INSERIMENTO  NOTA */
 
 app.post('/note', function(req, res) {
-    console.log(req.body)
-    console.log("sopra")
-    console.log(req.body.nome)
-    console.log(req.body.contenuto)
-    console.log(req.body)
-    console.log(req.session.user.username)
 
     con.query('INSERT INTO note (nome, contenuto, username) VALUES (?,?,?)', [req.body.nome, req.body.contenuto, req.session.user.username], function(err, data) {
 

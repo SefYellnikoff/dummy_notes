@@ -1,0 +1,6 @@
+<span class="title">Style your background!</span>
+<table>
+    <tr ng-repeat="color in colorTable">
+        <td><button ng-style="{'background-color':'{{ color }}'}" ng-click="backgroundColor(color, user);" class="btn"></button></td>
+    </tr>
+</table>
