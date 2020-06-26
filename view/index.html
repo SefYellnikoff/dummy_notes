@@ -15,7 +15,6 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-route.min.js"></script>
 
 <body ng-controller="noteController" ng-app="noteApp">
-
     <div class="row" id="title_container">
         <h1 class="title col-8">Notes for Dummies</h1>
         <div class="col-4">
@@ -27,7 +26,6 @@
             </ul>
         </div>
     </div>
-
     <div class="margin_div ">
 
         <div ng-if="!user" class="div" id="card">
@@ -53,14 +51,6 @@
 
         <div ng-show="user">
             <div class="container-fluid">
-
-
-                <div class="row">
-                    <div class="col-12">
-
-
-                    </div>
-                </div>
 
                 <div class="row">
                     <div ng-repeat="nota in note track by $index">

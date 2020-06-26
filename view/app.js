@@ -188,8 +188,6 @@ angular.module("noteApp", ["ngRoute"]).controller("noteController", ["$scope", "
     }*/
 
 
-
-
 }]).factory('notify', ['$window', function(win) {
     var msgs = [];
     return function(msg) {
